@@ -65,7 +65,7 @@ let urls = [];
 // Generate pages
 data.pages.forEach(page => {
 
-  // FIXED: bulletproof slug cleanup
+  // FIX: clean slug properly
   let cleanSlug = page.slug
     .toString()
     .toLowerCase()
@@ -75,7 +75,11 @@ data.pages.forEach(page => {
     .replace(/^status\//, "")
     .replace(/\/status\//g, "/");
 
-  const filePath = path.join(outputDir, `${cleanSlug}.html`);
+  // DEBUG LOGS
+  console.log("RAW:", page.slug);
+  console.log("CLEAN:", cleanSlug);
+
+  const filePath = path.join(outputDir, cleanSlug + ".html");
 
   const html = template({
     ...page,
