@@ -5,7 +5,7 @@ const path = require("path");
 const dataPath = path.join(__dirname, "data", "seo_950_pages.json");
 const data = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
-// Output folder (IMPORTANT: use public/)
+// Output folder
 const outputDir = path.join(__dirname, "public", "status");
 
 // Ensure output folder exists
@@ -50,7 +50,6 @@ function template(page) {
 <body>
   <h1>${page.title}</h1>
   <p class="status">${page.status || "Status: Operational"}</p>
-
   <p>${page.content}</p>
 
   <hr />
@@ -59,27 +58,27 @@ function template(page) {
 </html>`;
 }
 
-// Track sitemap URLs
+// Track URLs for sitemap
 let urls = [];
 
 // Generate pages
 data.pages.forEach(page => {
 
-  // FIX: clean slug properly
+  // Clean slug (flatten + remove bad paths)
   let cleanSlug = page.slug
     .toString()
     .toLowerCase()
-    .replace(/\\/g, "/")
-    .replace(/^\/+/, "")
-    .replace(/\/+$/, "")
+    .trim()
+    .replace(/^\/+|\/+$/g, "")
     .replace(/^status\//, "")
-    .replace(/\/status\//g, "/");
+    .replace(/\//g, "-");
 
-  // DEBUG LOGS
+  // Debug
   console.log("RAW:", page.slug);
   console.log("CLEAN:", cleanSlug);
 
-  const filePath = path.join(outputDir, cleanSlug + ".html");
+  // Correct file path (NO duplicated folders)
+  const filePath = path.join(outputDir, `${cleanSlug}.html`);
 
   const html = template({
     ...page,
@@ -91,7 +90,7 @@ data.pages.forEach(page => {
   urls.push(`${DOMAIN}/status/${cleanSlug}.html`);
 });
 
-// Generate sitemap in public/
+// Generate sitemap
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(url => `
