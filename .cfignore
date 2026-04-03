@@ -1,0 +1,7 @@
+node_modules
+status
+dist
+.git
+*.log
+seo_950_pages.json
+generate.js
