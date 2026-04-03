@@ -65,10 +65,10 @@ let urls = [];
 // Generate pages
 data.pages.forEach(page => {
 
-  // ✅ FIX: remove accidental "status/" from slugs
+  // FIX: remove accidental "status/" from slugs
   let cleanSlug = page.slug
-    .replace(/^\/+|\/+$/g, "")   // remove leading/trailing slashes
-    .replace("status/", "");     // prevent nested status/status
+    .replace(/^\/+|\/+$/g, "")
+    .replace("status/", "");
 
   const filePath = path.join(outputDir, `${cleanSlug}.html`);
 
