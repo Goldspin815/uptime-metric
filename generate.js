@@ -5,18 +5,16 @@ const path = require("path");
 const dataPath = path.join(__dirname, "data", "seo_950_pages.json");
 const data = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
-// Output folder
-const outputDir = path.join(__dirname, "status");
+// Output folder (IMPORTANT: use public/)
+const outputDir = path.join(__dirname, "public", "status");
 
 // Ensure output folder exists
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
-}
+fs.mkdirSync(outputDir, { recursive: true });
 
-// Base domain (CHANGE THIS to your real domain)
+// Base domain
 const DOMAIN = "https://uptimemetricpro.com";
 
-// Simple HTML template (SEO optimized but clean)
+// HTML template
 function template(page) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -66,28 +64,38 @@ let urls = [];
 
 // Generate pages
 data.pages.forEach(page => {
-  const filePath = path.join(outputDir, `${page.slug}.html`);
-  const html = template(page);
+
+  // ✅ FIX: remove accidental "status/" from slugs
+  let cleanSlug = page.slug
+    .replace(/^\/+|\/+$/g, "")   // remove leading/trailing slashes
+    .replace("status/", "");     // prevent nested status/status
+
+  const filePath = path.join(outputDir, `${cleanSlug}.html`);
+
+  const html = template({
+    ...page,
+    slug: cleanSlug
+  });
 
   fs.writeFileSync(filePath, html, "utf-8");
 
-  urls.push(`${DOMAIN}/status/${page.slug}.html`);
+  urls.push(`${DOMAIN}/status/${cleanSlug}.html`);
 });
 
-// Generate sitemap
+// Generate sitemap in public/
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(url => {
-    return `
+${urls.map(url => `
   <url>
     <loc>${url}</loc>
-  </url>`;
-  })
-  .join("")}
+  </url>`).join("")}
 </urlset>`;
 
-fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap, "utf-8");
+fs.writeFileSync(
+  path.join(__dirname, "public", "sitemap.xml"),
+  sitemap,
+  "utf-8"
+);
 
 console.log("✅ All pages generated successfully!");
 console.log("✅ Sitemap generated!");
