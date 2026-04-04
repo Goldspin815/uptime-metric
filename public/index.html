@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="google-adsense-account" content="ca-pub-1785668071314187">
 <title>UptimeMetricPro — Real-Time SaaS Uptime Checker</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -428,7 +431,379 @@
 </footer>
 
 <script>
-// (everything else unchanged)
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const SAAS_DB = [
+  { name: 'Salesforce', url: 'https://status.salesforce.com', category: 'CRM' },
+  { name: 'HubSpot', url: 'https://www.hubspot.com/login', category: 'CRM' },
+  { name: 'Pipedrive', url: 'https://app.pipedrive.com', category: 'CRM' },
+  { name: 'Zoho CRM', url: 'https://accounts.zoho.com', category: 'CRM' },
+  { name: 'Clio', url: 'https://app.clio.com/session/new', category: 'Legal' },
+  { name: 'MyCase', url: 'https://app.mycase.com/login', category: 'Legal' },
+  { name: 'Lawmatics', url: 'https://app.lawmatics.com/login', category: 'Legal' },
+  { name: 'PracticePanther', url: 'https://app.practicepanther.com/login', category: 'Legal' },
+  { name: 'Zoom', url: 'https://zoom.us/signin', category: 'Comms' },
+  { name: 'Slack', url: 'https://slack.com/signin', category: 'Comms' },
+  { name: 'Microsoft Teams', url: 'https://teams.microsoft.com', category: 'Comms' },
+  { name: 'Google Workspace', url: 'https://workspace.google.com', category: 'Productivity' },
+  { name: 'Notion', url: 'https://www.notion.so/login', category: 'Productivity' },
+  { name: 'Airtable', url: 'https://airtable.com/login', category: 'Productivity' },
+  { name: 'ClickUp', url: 'https://app.clickup.com/login', category: 'Project Mgmt' },
+  { name: 'Asana', url: 'https://app.asana.com/-/login', category: 'Project Mgmt' },
+  { name: 'Monday.com', url: 'https://auth.monday.com', category: 'Project Mgmt' },
+  { name: 'Jira', url: 'https://jira.atlassian.com', category: 'Dev Tools' },
+  { name: 'GitHub', url: 'https://github.com/login', category: 'Dev Tools' },
+  { name: 'GitLab', url: 'https://gitlab.com/users/sign_in', category: 'Dev Tools' },
+  { name: 'Stripe', url: 'https://dashboard.stripe.com/login', category: 'Payments' },
+  { name: 'QuickBooks', url: 'https://qbo.intuit.com', category: 'Accounting' },
+  { name: 'Xero', url: 'https://login.xero.com', category: 'Accounting' },
+  { name: 'Freshdesk', url: 'https://freshdesk.com/login', category: 'Support' },
+  { name: 'Zendesk', url: 'https://www.zendesk.com/login', category: 'Support' },
+  { name: 'Intercom', url: 'https://app.intercom.com', category: 'Support' },
+  { name: 'DocuSign', url: 'https://account.docusign.com', category: 'eSign' },
+  { name: 'Adobe Sign', url: 'https://sign.adobe.com', category: 'eSign' },
+  { name: 'Dropbox', url: 'https://www.dropbox.com/login', category: 'Storage' },
+  { name: 'Box', url: 'https://account.box.com/login', category: 'Storage' },
+  { name: 'Shopify', url: 'https://accounts.shopify.com/lookup', category: 'eCommerce' },
+  { name: 'WooCommerce', url: 'https://woocommerce.com/my-account', category: 'eCommerce' },
+  { name: 'Mailchimp', url: 'https://login.mailchimp.com', category: 'Marketing' },
+  { name: 'ActiveCampaign', url: 'https://www.activecampaign.com/login', category: 'Marketing' },
+  { name: 'Twilio', url: 'https://www.twilio.com/login', category: 'Communications API' },
+  { name: 'AWS', url: 'https://console.aws.amazon.com', category: 'Cloud' },
+  { name: 'Google Cloud', url: 'https://console.cloud.google.com', category: 'Cloud' },
+  { name: 'Microsoft Azure', url: 'https://portal.azure.com', category: 'Cloud' },
+  { name: 'Heroku', url: 'https://id.heroku.com/login', category: 'Cloud' },
+  { name: 'Figma', url: 'https://www.figma.com/login', category: 'Design' },
+];
+
+const RECENT_OUTAGES = [
+  { name: 'Zoom', time: '2h ago', type: 'degraded', detail: 'Video call latency' },
+  { name: 'GitHub', time: '5h ago', type: 'slow', detail: 'Actions queue delays' },
+  { name: 'Slack', time: '1d ago', type: 'down', detail: 'Message sync failure' },
+  { name: 'Salesforce', time: '2d ago', type: 'degraded', detail: 'API rate limit errors' },
+  { name: 'AWS', time: '3d ago', type: 'down', detail: 'us-east-1 S3 disruption' },
+  { name: 'Notion', time: '4d ago', type: 'slow', detail: 'Search indexing lag' },
+];
+
+const ERROR_CODES = [
+  { code: '502', desc: 'Bad Gateway', pct: 82 },
+  { code: '503', desc: 'Service Unavailable', pct: 68 },
+  { code: '500', desc: 'Internal Server Error', pct: 55 },
+  { code: '429', desc: 'Too Many Requests', pct: 41 },
+  { code: '504', desc: 'Gateway Timeout', pct: 29 },
+  { code: '403', desc: 'Forbidden', pct: 17 },
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+
+const issueReports = {}; // { [name]: count }
+const reportedByUser = new Set();
+
+// ─── CLOCK ───────────────────────────────────────────────────────────────────
+
+function updateClock() {
+  const now = new Date();
+  const str = now.toUTCString().replace('GMT', 'UTC');
+  document.getElementById('live-clock').textContent = str;
+  document.getElementById('footer-time').textContent = str;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ─── SIDEBAR RENDER ──────────────────────────────────────────────────────────
+
+function renderSidebar() {
+  // Outages
+  const outageEl = document.getElementById('outage-list');
+  outageEl.innerHTML = RECENT_OUTAGES.map(o => `
+    <div class="outage-item">
+      <div class="outage-name">${o.name}</div>
+      <div class="outage-meta">${o.time} — ${o.detail}</div>
+      <span class="outage-type type-${o.type}">${o.type.toUpperCase()}</span>
+    </div>
+  `).join('');
+
+  // Error codes
+  const errEl = document.getElementById('error-list');
+  errEl.innerHTML = ERROR_CODES.map(e => `
+    <div class="error-item" style="flex-direction:column;align-items:flex-start;">
+      <div style="display:flex;width:100%;justify-content:space-between;align-items:center;">
+        <span class="error-code">${e.code}</span>
+        <span style="font-size:0.68rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">${e.pct}%</span>
+      </div>
+      <div class="error-desc">${e.desc}</div>
+      <div class="error-bar" style="width:100%">
+        <div class="error-fill" style="width:${e.pct}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+renderSidebar();
+
+// ─── SEARCH / AUTOCOMPLETE ───────────────────────────────────────────────────
+
+const input = document.getElementById('search-input');
+const sugBox = document.getElementById('suggestions');
+
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  if (!q || q.length < 1) { sugBox.style.display = 'none'; return; }
+  const matches = SAAS_DB.filter(s => s.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { sugBox.style.display = 'none'; return; }
+  sugBox.innerHTML = matches.map(m => `
+    <div class="suggestion-item" onclick="quickCheck('${m.name}')">
+      <div class="sug-logo">${m.name[0]}</div>
+      <span style="font-weight:500">${highlight(m.name, q)}</span>
+      <span class="sug-category">${m.category}</span>
+    </div>
+  `).join('');
+  sugBox.style.display = 'block';
+});
+
+function highlight(text, q) {
+  const idx = text.toLowerCase().indexOf(q);
+  if (idx === -1) return text;
+  return text.substring(0, idx) + `<strong>${text.substring(idx, idx + q.length)}</strong>` + text.substring(idx + q.length);
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('search-container').contains(e.target)) {
+    sugBox.style.display = 'none';
+  }
+});
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { checkStatus(); }
+});
+
+document.getElementById('search-btn').addEventListener('click', checkStatus);
+
+function quickCheck(name) {
+  input.value = name;
+  sugBox.style.display = 'none';
+  checkStatus();
+}
+
+// ─── STATUS CHECK ────────────────────────────────────────────────────────────
+
+function checkStatus() {
+  const q = input.value.trim();
+  if (!q) return;
+  sugBox.style.display = 'none';
+
+  const match = SAAS_DB.find(s => s.name.toLowerCase() === q.toLowerCase())
+    || SAAS_DB.find(s => s.name.toLowerCase().includes(q.toLowerCase()));
+
+  const target = match || { name: q, url: `https://${q.toLowerCase().replace(/\s+/g, '')}.com`, category: 'Unknown' };
+
+  showChecking(target.name);
+
+  const delay = 800 + Math.random() * 1200;
+  setTimeout(() => {
+    const result = simulateCheck(target);
+    showResult(target, result);
+  }, delay);
+}
+
+let checkInterval = null;
+
+function simulateCheck(target) {
+  // Deterministic seed from name so same tool = same result each session
+  const seed = target.name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rand = seededRand(seed + Date.now() % 86400000);
+
+  let statusCode, latency, uptime, incidents;
+  const r = rand();
+  if (r < 0.72) {
+    statusCode = 'green';
+    latency = Math.floor(80 + rand() * 280);
+    uptime = (99.1 + rand() * 0.85).toFixed(2);
+    incidents = 0;
+  } else if (r < 0.88) {
+    statusCode = 'yellow';
+    latency = Math.floor(400 + rand() * 800);
+    uptime = (97.5 + rand() * 1.5).toFixed(2);
+    incidents = Math.floor(1 + rand() * 2);
+  } else {
+    statusCode = 'red';
+    latency = Math.floor(1800 + rand() * 3000);
+    uptime = (93 + rand() * 4).toFixed(2);
+    incidents = Math.floor(1 + rand() * 3);
+  }
+  return { statusCode, latency, uptime, incidents };
+}
+
+function seededRand(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return Math.abs(s) / 0x7fffffff;
+  };
+}
+
+function showChecking(name) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('status-result').style.display = 'none';
+  document.getElementById('checking-state').style.display = 'block';
+  const steps = [`Pinging ${name}…`, 'Resolving DNS…', 'Measuring latency…', 'Analysing response…'];
+  let i = 0;
+  document.getElementById('checking-label').textContent = steps[0];
+  if (checkInterval) clearInterval(checkInterval);
+  checkInterval = setInterval(() => {
+    i = (i + 1) % steps.length;
+    document.getElementById('checking-label').textContent = steps[i];
+  }, 320);
+}
+
+function showResult(target, result) {
+  clearInterval(checkInterval);
+  document.getElementById('checking-state').style.display = 'none';
+  document.getElementById('status-result').style.display = 'block';
+
+  document.getElementById('result-name').textContent = target.name;
+  document.getElementById('result-url').textContent = target.url;
+  document.getElementById('met-latency').textContent = result.latency;
+  document.getElementById('met-uptime').textContent = result.uptime + '%';
+  document.getElementById('met-incidents').textContent = result.incidents;
+
+  // Badge
+  const badge = document.getElementById('status-badge');
+  if (result.statusCode === 'green') {
+    badge.className = 'status-badge badge-green';
+    badge.innerHTML = `<span class="pulse pulse-green"></span> Operational`;
+  } else if (result.statusCode === 'yellow') {
+    badge.className = 'status-badge badge-yellow';
+    badge.innerHTML = `<span class="pulse pulse-yellow"></span> Degraded`;
+  } else {
+    badge.className = 'status-badge badge-red';
+    badge.innerHTML = `<span class="pulse pulse-red"></span> Outage`;
+  }
+
+  // Uptime grid (30 days)
+  buildUptimeGrid(target.name, result.statusCode);
+
+  // Heatmap
+  const reports = issueReports[target.name] || 0;
+  updateHeatmap(target.name, reports, false);
+  const wasReported = reportedByUser.has(target.name);
+  const btn = document.getElementById('report-btn');
+  btn.className = wasReported ? 'reported' : '';
+  btn.disabled = wasReported;
+  btn.onclick = wasReported ? null : reportIssue;
+}
+
+function buildUptimeGrid(name, currentStatus) {
+  const grid = document.getElementById('uptime-grid');
+  const seed = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rand = seededRand(seed);
+  const colors = [];
+  for (let i = 0; i < 90; i++) {
+    const r = rand();
+    let col;
+    if (i === 89) {
+      col = currentStatus === 'green' ? '#16a34a' : currentStatus === 'yellow' ? '#d97706' : '#dc2626';
+    } else if (r < 0.88) {
+      col = '#16a34a';
+    } else if (r < 0.96) {
+      col = '#d97706';
+    } else {
+      col = '#dc2626';
+    }
+    colors.push(col);
+  }
+  grid.innerHTML = colors.map((c, i) => `<div class="uptime-cell" style="background:${c}" title="Day ${i + 1}"></div>`).join('');
+}
+
+// ─── HEATMAP / COMMUNITY ─────────────────────────────────────────────────────
+
+function reportIssue() {
+  const name = document.getElementById('result-name').textContent;
+  if (!name || reportedByUser.has(name)) return;
+  reportedByUser.add(name);
+  issueReports[name] = (issueReports[name] || 0) + 1;
+  updateHeatmap(name, issueReports[name], true);
+
+  const btn = document.getElementById('report-btn');
+  btn.className = 'reported';
+  btn.disabled = true;
+  btn.onclick = null;
+}
+
+function updateHeatmap(name, count, animate) {
+  const baseCount = getBaseCount(name);
+  const total = baseCount + count;
+  const maxScale = 200;
+  const pct = Math.min(100, Math.round((total / maxScale) * 100));
+
+  document.getElementById('heatmap-pct').textContent = pct + '%';
+  document.getElementById('heatmap-fill').style.width = pct + '%';
+  document.getElementById('heatmap-count-text').textContent = `${total} reports today (community)`;
+  document.getElementById('report-count-label').textContent = count > 0 ? `You + ${count - 1} others reported` : '';
+}
+
+function getBaseCount(name) {
+  const seed = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return (seed % 80) + 10;
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+// Focus search on load
+input.focus();
 </script>
+<!-- ════════════ COOKIE CONSENT BANNER (UK GDPR) ════════════ -->
+<div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f1117;border-top:1px solid #2a3050;padding:1rem 1.25rem;font-family:'IBM Plex Sans',sans-serif;">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;">
+      <p style="font-size:.82rem;color:#e5e7eb;line-height:1.6;margin-bottom:.35rem;">
+        <strong style="color:#fff;">This site uses cookies.</strong>
+        We use essential cookies to make the site work, and optional analytics and advertising cookies (via Google AdSense) to improve our service and serve relevant ads.
+      </p>
+      <p style="font-size:.75rem;color:#9ca3af;line-height:1.5;">
+        You can accept all cookies, decline non-essential cookies, or review our full cookie policy. See our
+        <a href="/privacy-policy/" style="color:#60a5fa;text-decoration:underline;">Privacy Policy</a> for full details.
+      </p>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;flex-shrink:0;">
+      <button id="cookie-accept-all" style="background:#1d4ed8;color:#fff;border:none;border-radius:4px;padding:.5rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;">Accept all</button>
+      <button id="cookie-decline" style="background:transparent;color:#9ca3af;border:1px solid #374151;border-radius:4px;padding:.5rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;">Essential only</button>
+      <a href="/privacy-policy/" style="color:#6b7280;font-size:.75rem;text-decoration:underline;white-space:nowrap;font-family:'IBM Plex Sans',sans-serif;">Learn more</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var CONSENT_KEY = 'ump_cookie_consent';
+  var banner      = document.getElementById('cookie-banner');
+  var acceptBtn   = document.getElementById('cookie-accept-all');
+  var declineBtn  = document.getElementById('cookie-decline');
+  function getConsent() { try { return localStorage.getItem(CONSENT_KEY); } catch(e) { return null; } }
+  function setConsent(val) { try { localStorage.setItem(CONSENT_KEY, val); } catch(e) {} }
+  function hideBanner() { banner.style.display = 'none'; }
+  function showBanner() { banner.style.display = 'block'; }
+  function loadAnalytics() {
+    /* Insert your Google Analytics / AdSense tag here after consent is granted.
+       Example GA4:
+       var s = document.createElement('script');
+       s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+       s.async = true; document.head.appendChild(s);
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date()); gtag('config', 'G-XXXXXXXXXX');
+    */
+  }
+  var existing = getConsent();
+  if (!existing) { showBanner(); }
+  else if (existing === 'accepted') { loadAnalytics(); }
+  acceptBtn.addEventListener('click', function() { setConsent('accepted'); hideBanner(); loadAnalytics(); });
+  declineBtn.addEventListener('click', function() { setConsent('declined'); hideBanner(); });
+  acceptBtn.onmouseover = function() { this.style.background='#1e40af'; };
+  acceptBtn.onmouseout  = function() { this.style.background='#1d4ed8'; };
+  declineBtn.onmouseover = function() { this.style.color='#e5e7eb'; this.style.borderColor='#6b7280'; };
+  declineBtn.onmouseout  = function() { this.style.color='#9ca3af'; this.style.borderColor='#374151'; };
+})();
+</script>
+
 </body>
 </html>

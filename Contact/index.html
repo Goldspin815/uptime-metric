@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Contact — UptimeMetricPro</title>
+<meta name="description" content="Contact UptimeMetricPro. Send us a message using our contact form for general enquiries, feedback or data requests."/>
+<link rel="canonical" href="https://uptimemetricpro.com/contact/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4; --card: #ffffff; --border: #e5e2db;
+  --text: #1a1917; --muted: #6b7280; --accent: #1d4ed8; --accent2: #3b82f6;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+a { color: var(--accent); }
+a:hover { text-decoration: underline; }
+
+nav {
+  background: #0f1117; padding: 0 1.5rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50; border-bottom: 1px solid #1e2333;
+}
+.nav-logo { font-family: var(--mono); font-size: .95rem; font-weight: 600; color: #fff; letter-spacing: -.3px; text-decoration: none; }
+.nav-logo em { color: #60a5fa; font-style: normal; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { font-family: var(--mono); font-size: .72rem; color: #9ca3af; text-decoration: none; transition: color .15s; }
+.nav-links a:hover { color: #60a5fa; }
+
+.hero {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 2.5rem 1.5rem 2rem;
+}
+.hero-inner { max-width: 680px; margin: 0 auto; }
+.page-label {
+  font-family: var(--mono); font-size: .65rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+  margin-bottom: .6rem;
+}
+h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; letter-spacing: -.3px; margin-bottom: .5rem; }
+.hero-sub { font-size: .93rem; color: #6b7280; }
+
+.page-wrap { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 3rem; display: grid; grid-template-columns: 1fr 280px; gap: 2rem; align-items: start; }
+@media (max-width: 720px) { .page-wrap { grid-template-columns: 1fr; } }
+
+/* Form */
+.form-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+.form-card h2 { font-size: .95rem; font-weight: 700; margin-bottom: 1.25rem; }
+
+.field { margin-bottom: 1.1rem; }
+.field label { display: block; font-size: .8rem; font-weight: 600; margin-bottom: .35rem; color: var(--text); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: .65rem .85rem;
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 4px;
+  font-family: var(--sans); font-size: .88rem; color: var(--text);
+  outline: none; transition: border-color .15s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); background: #fff; }
+.field textarea { resize: vertical; min-height: 130px; }
+.field-hint { font-size: .72rem; color: var(--muted); margin-top: .3rem; }
+
+.form-notice {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px;
+  padding: .75rem 1rem; margin-bottom: 1.1rem; font-size: .8rem; color: #1e40af;
+}
+
+.submit-btn {
+  width: 100%; padding: .75rem; background: var(--accent); color: #fff;
+  border: none; border-radius: 4px; font-family: var(--sans);
+  font-size: .88rem; font-weight: 600; cursor: pointer; transition: background .15s;
+}
+.submit-btn:hover { background: #1e40af; }
+.submit-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+.success-msg {
+  display: none; background: #f0fdf4; border: 1px solid #86efac;
+  border-radius: 4px; padding: 1rem; text-align: center;
+  color: #15803d; font-size: .88rem; margin-top: 1rem;
+}
+.success-msg.show { display: block; }
+
+/* Sidebar info */
+.info-card { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; margin-bottom: 1rem; }
+.info-card:last-child { margin-bottom: 0; }
+.info-title { font-family: var(--mono); font-size: .63rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: .75rem; }
+.info-card p { font-size: .83rem; color: #374151; margin-bottom: .6rem; }
+.info-card p:last-child { margin-bottom: 0; }
+
+.warning-box {
+  background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px;
+  padding: .85rem 1rem;
+}
+.warning-box p { font-size: .8rem; color: #92400e; margin-bottom: 0; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 1.5rem;
+  text-align: center; font-family: var(--mono); font-size: .67rem; color: var(--muted);
+  max-width: 680px; margin: 0 auto;
+}
+.footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: .5rem; flex-wrap: wrap; }
+.footer-links a { font-family: var(--mono); font-size: .67rem; color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--accent); }
+
+/* Char counter */
+#char-count { font-size: .72rem; color: var(--muted); float: right; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Uptime<em>Metric</em>Pro</a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" style="color:#fff;">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="page-label">Contact</div>
+    <h1>Get in touch</h1>
+    <p class="hero-sub">Use the form below for general enquiries, feedback, or data protection requests. We aim to respond within 2–3 business days.</p>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- FORM -->
+  <div>
+    <div class="form-card">
+      <h2>Send a message</h2>
+
+      <div class="form-notice">
+        ℹ️ This form is for enquiries about UptimeMetricPro only. We are not able to help with issues relating to the third-party services listed on this site — please contact those services directly.
+      </div>
+
+      <form id="contact-form" novalidate>
+
+        <div class="field">
+          <label for="name">Your name <span style="color:#dc2626">*</span></label>
+          <input type="text" id="name" name="name" placeholder="Jane Smith" required autocomplete="name"/>
+        </div>
+
+        <div class="field">
+          <label for="email">Your email address <span style="color:#dc2626">*</span></label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required autocomplete="email"/>
+          <div class="field-hint">We will only use this to reply to your message.</div>
+        </div>
+
+        <div class="field">
+          <label for="subject">Subject <span style="color:#dc2626">*</span></label>
+          <select id="subject" name="subject" required>
+            <option value="" disabled selected>Select a subject…</option>
+            <option value="general">General enquiry</option>
+            <option value="feedback">Feedback or suggestion</option>
+            <option value="data-request">Data protection / GDPR request</option>
+            <option value="report">Report incorrect status information</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="message">Message <span style="color:#dc2626">*</span> <span id="char-count">0 / 1000</span></label>
+          <textarea id="message" name="message" placeholder="Write your message here…" required maxlength="1000"></textarea>
+        </div>
+
+        <div class="field" style="display:flex;align-items:flex-start;gap:.6rem;">
+          <input type="checkbox" id="privacy-agree" name="privacy-agree" required style="width:auto;margin-top:3px;flex-shrink:0;"/>
+          <label for="privacy-agree" style="font-size:.8rem;font-weight:400;cursor:pointer;">
+            I have read and agree to the <a href="/privacy-policy/" target="_blank">Privacy Policy</a>. I understand my data will be used solely to respond to this enquiry. <span style="color:#dc2626">*</span>
+          </label>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">Send Message</button>
+
+        <div id="error-msg" style="display:none;margin-top:.75rem;padding:.65rem 1rem;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;font-size:.82rem;color:#dc2626;"></div>
+
+      </form>
+
+      <div class="success-msg" id="success-msg">
+        ✓ Your message has been sent. We will get back to you within 2–3 business days.
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="info-card">
+      <div class="info-title">Response Time</div>
+      <p>We aim to respond to all messages within <strong>2–3 business days</strong>.</p>
+      <p>Response times may be longer around UK public holidays.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-title">Data Protection Requests</div>
+      <p>To exercise your rights under UK GDPR — including requests to access, correct or delete your data — please select <strong>"Data protection / GDPR request"</strong> as the subject above.</p>
+      <p>We will respond within 30 days as required by law.</p>
+    </div>
+
+    <div class="info-card">
+      <div class="info-title">Not what you're looking for?</div>
+      <div class="warning-box">
+        <p>We cannot help with outages, errors or account issues relating to the services listed on this site. Please contact those services directly through their official support channels.</p>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-title">Useful Links</div>
+      <p><a href="/">← Check a service status</a></p>
+      <p><a href="/about/">About UptimeMetricPro</a></p>
+      <p><a href="/privacy-policy/">Privacy Policy</a></p>
+    </div>
+  </aside>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" style="color:var(--accent);">Contact</a>
+    <a href="/privacy-policy/">Privacy Policy</a>
+  </div>
+  <div>© 2025 UptimeMetricPro — Not affiliated with any monitored service.</div>
+</footer>
+
+<script>
+// Character counter
+const msgField = document.getElementById('message');
+const charCount = document.getElementById('char-count');
+msgField.addEventListener('input', () => {
+  const len = msgField.value.length;
+  charCount.textContent = `${len} / 1000`;
+  charCount.style.color = len > 900 ? '#dc2626' : 'var(--muted)';
+});
+
+// Form submission
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name    = document.getElementById('name').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value.trim();
+  const agreed  = document.getElementById('privacy-agree').checked;
+  const errEl   = document.getElementById('error-msg');
+
+  errEl.style.display = 'none';
+
+  if (!name || !email || !subject || !message) {
+    errEl.textContent = 'Please fill in all required fields before submitting.';
+    errEl.style.display = 'block';
+    return;
+  }
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!agreed) {
+    errEl.textContent = 'Please agree to the Privacy Policy before submitting.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Disable button to prevent double submit
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  // Simulate submission — replace this fetch with your actual form handler
+  // e.g. Formspree: fetch('https://formspree.io/f/YOUR_ID', { method:'POST', body: new FormData(this) })
+  setTimeout(() => {
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('success-msg').classList.add('show');
+  }, 800);
+});
+</script>
+</body>
+</html>

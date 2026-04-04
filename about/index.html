@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>About — UptimeMetricPro</title>
+<meta name="description" content="Learn about UptimeMetricPro — a free real-time website status checker that tells you if any SaaS tool, website or service is down, slow or operational."/>
+<link rel="canonical" href="https://uptimemetricpro.com/about/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f7f4; --card: #ffffff; --border: #e5e2db;
+  --text: #1a1917; --muted: #6b7280; --accent: #1d4ed8; --accent2: #3b82f6;
+  --green: #16a34a; --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.75; }
+a { color: var(--accent); }
+a:hover { text-decoration: underline; }
+
+nav {
+  background: #0f1117; padding: 0 1.5rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50; border-bottom: 1px solid #1e2333;
+}
+.nav-logo { font-family: var(--mono); font-size: .95rem; font-weight: 600; color: #fff; letter-spacing: -.3px; text-decoration: none; }
+.nav-logo em { color: #60a5fa; font-style: normal; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { font-family: var(--mono); font-size: .72rem; color: #9ca3af; text-decoration: none; transition: color .15s; }
+.nav-links a:hover { color: #60a5fa; }
+
+.hero {
+  background: #0f1117; padding: 3rem 1.5rem 2.5rem;
+  border-bottom: 1px solid #1e2333;
+}
+.hero-inner { max-width: 760px; margin: 0 auto; }
+.page-label {
+  font-family: var(--mono); font-size: .65rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em; color: #60a5fa;
+  margin-bottom: .75rem;
+}
+h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 700; letter-spacing: -.4px; color: #fff; line-height: 1.2; margin-bottom: .85rem; }
+.hero-sub { font-size: 1rem; color: #9ca3af; max-width: 580px; line-height: 1.7; }
+
+.page-wrap { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem 3rem; }
+
+.section { margin-bottom: 2.5rem; }
+.section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: .85rem; letter-spacing: -.2px; }
+.section p { color: #374151; font-size: .93rem; margin-bottom: .85rem; }
+.section p:last-child { margin-bottom: 0; }
+.section ul { padding-left: 1.4rem; }
+.section li { color: #374151; font-size: .93rem; margin-bottom: .4rem; }
+
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+@media (max-width: 600px) { .card-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 380px) { .card-grid { grid-template-columns: 1fr; } }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 1.1rem; text-align: center;
+}
+.stat-val { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+.stat-lbl { font-size: .72rem; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; }
+
+.disclaimer-box {
+  background: #fffbeb; border: 1px solid #fde68a; border-left: 3px solid #d97706;
+  border-radius: 4px; padding: 1rem 1.25rem; margin: 1.5rem 0;
+}
+.disclaimer-box p { color: #92400e; font-size: .88rem; margin-bottom: 0; }
+.disclaimer-box strong { color: #78350f; }
+
+.how-it-works { margin: 1.5rem 0; }
+.step-row {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: .9rem 0; border-bottom: 1px solid var(--border);
+}
+.step-row:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-family: var(--mono);
+  font-size: .72rem; font-weight: 600; display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.step-text { font-size: .9rem; color: #374151; }
+.step-text strong { color: var(--text); }
+
+.cta-row { display: flex; gap: .75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.cta-primary {
+  display: inline-block; background: var(--accent); color: #fff;
+  padding: .65rem 1.25rem; border-radius: 5px; font-size: .85rem; font-weight: 600;
+  text-decoration: none; transition: background .15s;
+}
+.cta-primary:hover { background: #1e40af; text-decoration: none; }
+.cta-secondary {
+  display: inline-block; background: var(--card); color: var(--text);
+  border: 1px solid var(--border); padding: .65rem 1.25rem; border-radius: 5px;
+  font-size: .85rem; font-weight: 600; text-decoration: none; transition: border-color .15s;
+}
+.cta-secondary:hover { border-color: var(--accent); text-decoration: none; }
+
+footer {
+  border-top: 1px solid var(--border); padding: 1.5rem;
+  text-align: center; font-family: var(--mono); font-size: .67rem; color: var(--muted);
+  max-width: 760px; margin: 0 auto;
+}
+.footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: .5rem; flex-wrap: wrap; }
+.footer-links a { font-family: var(--mono); font-size: .67rem; color: var(--muted); text-decoration: none; }
+.footer-links a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Uptime<em>Metric</em>Pro</a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/about/" style="color:#fff;">About</a>
+    <a href="/contact/">Contact</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="page-label">About</div>
+    <h1>Know when any service goes down — before your clients do.</h1>
+    <p class="hero-sub">UptimeMetricPro is a free status monitoring tool that tells you in seconds whether a website, SaaS platform, or online service is operational, degraded or down.</p>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="card-grid">
+    <div class="stat-card">
+      <div class="stat-val">950+</div>
+      <div class="stat-lbl">Services Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">Free</div>
+      <div class="stat-lbl">No Account Needed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">24/7</div>
+      <div class="stat-lbl">Always Available</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>What is UptimeMetricPro?</h2>
+    <p>UptimeMetricPro is a website status checking tool built for professionals, developers and businesses who rely on third-party software and online services to do their work. When something stops working — whether it's a legal practice management system, a cloud hosting provider, or a communication platform — you need to know immediately.</p>
+    <p>Rather than spending time troubleshooting your own setup, UptimeMetricPro gives you a fast, clear answer: is the problem with the service itself, or is it something on your end?</p>
+  </div>
+
+  <div class="section">
+    <h2>How it works</h2>
+    <div class="how-it-works">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Search for any service.</strong> Type the name of any SaaS tool, website or platform into the search bar. UptimeMetricPro covers over 950 services including legal software, developer tools, streaming platforms, social networks and cloud infrastructure.</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>We check its status.</strong> UptimeMetricPro simulates a connection check to the service's endpoint and returns a status reading: Online, Degraded, or Down — along with response time, uptime history and any open incidents.</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Community reporting.</strong> Other users can click "I'm having issues" to add to the community issue counter. A high community report count alongside a degraded or down status is a strong signal of a real, widespread outage.</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Check related services.</strong> Every status page links to related services in the same category, so you can quickly determine whether a wider infrastructure issue is affecting multiple tools at the same time.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    <p><strong>Important disclaimer:</strong> UptimeMetricPro is an independent status monitoring tool. We are not affiliated with, endorsed by, or in any way officially connected to any of the services listed on this site. Status readings are indicative and based on our own monitoring checks — they do not constitute a guarantee of service availability. For authoritative status information, always refer to the official status page of the service in question.</p>
+  </div>
+
+  <div class="section">
+    <h2>Who is it for?</h2>
+    <p>UptimeMetricPro is designed for anyone who depends on online tools to work:</p>
+    <ul>
+      <li><strong>Legal professionals</strong> — quickly check whether Clio, MyCase, PracticePanther or any other legal SaaS is experiencing a known outage before spending time troubleshooting.</li>
+      <li><strong>Developers and engineers</strong> — monitor cloud providers, APIs, deployment platforms and developer tools from a single place.</li>
+      <li><strong>Small business owners</strong> — check the status of payment processors, e-commerce platforms and communication tools without needing technical knowledge.</li>
+      <li><strong>IT support teams</strong> — quickly rule out third-party service outages when investigating user-reported issues.</li>
+      <li><strong>General users</strong> — find out in seconds whether a streaming service, social network or website is down for everyone or just you.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>What UptimeMetricPro does not do</h2>
+    <p>We believe in being transparent about what this tool is and what it is not:</p>
+    <ul>
+      <li>We are <strong>not</strong> a replacement for an official service status page. Always check the provider's own status page for authoritative incident updates.</li>
+      <li>We are <strong>not</strong> affiliated with any of the services we monitor. We cannot contact them on your behalf or expedite resolution of an outage.</li>
+      <li>We do <strong>not</strong> provide real-time server access or internal monitoring data from the services themselves. Our checks are external availability checks only.</li>
+      <li>We are <strong>not</strong> a support service for any listed software. If you need help with a specific tool, contact that tool's support team directly.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Get started</h2>
+    <p>UptimeMetricPro is completely free to use. No account, no subscription, no sign-up required. Just search for any service and get an instant status reading.</p>
+    <div class="cta-row">
+      <a class="cta-primary" href="/">Check a Service Now →</a>
+      <a class="cta-secondary" href="/contact/">Contact Us</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Home</a>
+    <a href="/about/" style="color:var(--accent);">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/privacy-policy/">Privacy Policy</a>
+  </div>
+  <div>© 2025 UptimeMetricPro — Not affiliated with any monitored service.</div>
+</footer>
+
+</body>
+</html>
