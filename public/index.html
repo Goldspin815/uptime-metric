@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="google-adsense-account" content="ca-pub-1785668071314187">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>UptimeMetricPro — Real-Time SaaS Uptime Checker</title>
+<title>Free Website Uptime Monitoring Tool | UptimeMetricPro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -270,6 +270,49 @@
   /* Scroll */
   ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  /* SEO Hero block */
+  .seo-hero {
+    background: var(--text);
+    color: #fff;
+    padding: 1.1rem 1.5rem 1rem;
+    border-bottom: 1px solid #333;
+    text-align: center;
+  }
+  .seo-hero h1 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+    margin-bottom: 0.3rem;
+  }
+  .seo-hero p {
+    font-size: clamp(0.78rem, 2vw, 0.88rem);
+    color: #9ca3af;
+    line-height: 1.5;
+  }
+
+  /* Mobile: prevent nav text clipping */
+  @media (max-width: 480px) {
+    #site-header {
+      padding: 0 0.75rem;
+      flex-wrap: nowrap;
+    }
+    #site-header nav {
+      gap: 0.65rem !important;
+    }
+    #site-header nav a {
+      font-size: 0.62rem !important;
+    }
+    .header-meta {
+      display: none;
+    }
+    .seo-hero {
+      padding: 0.85rem 1rem 0.8rem;
+    }
+  }
 </style>
 </head>
 <body>
@@ -286,6 +329,12 @@
     <div class="header-meta" id="live-clock">— live</div>
   </div>
 </header>
+
+<!-- SEO HERO — H1 + sub-headline -->
+<div class="seo-hero">
+  <h1>Free Website Uptime Monitoring Tool</h1>
+  <p>Monitor website uptime in real time and get instant downtime alerts.</p>
+</div>
 
 <!-- TOP AD STRIP (blends as a featured area) -->
 <div style="max-width:1280px;margin:0 auto;padding:0.75rem 1rem 0;">
