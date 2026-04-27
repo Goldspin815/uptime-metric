@@ -76,15 +76,15 @@ function checkStatus() {
 
   // ✅ REAL BACKEND CALL (replaces simulateCheck)
   fetch('/check', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: target.name,
-      url: target.url
-    })
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: target.name,
+    url: target.url
   })
+})
   .then(res => res.json())
   .then(result => {
     showResult(target, result);
