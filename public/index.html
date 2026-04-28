@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="google-adsense-account" content="ca-pub-1785668071314187">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Free Website Uptime Monitoring Tool | UptimeMetricPro</title>
+<title>UptimeMetricPro — Real-Time SaaS Uptime Checker</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -33,24 +33,487 @@
     line-height: 1.5;
   }
   code, .mono { font-family: 'IBM Plex Mono', monospace; }
-  /* (ALL YOUR CSS REMAINS EXACTLY THE SAME — UNCHANGED) */
+
+  /* Header */
+  #site-header {
+    background: var(--text);
+    color: #fff;
+    padding: 0 1.5rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 1rem; letter-spacing: -0.5px; }
+  .logo span { color: #60a5fa; }
+  .header-meta { font-size: 0.7rem; color: #9ca3af; font-family: 'IBM Plex Mono', monospace; }
+
+  /* Layout */
+  .page-wrap { max-width: 1280px; margin: 0 auto; padding: 1.25rem 1rem; display: grid; grid-template-columns: 1fr 260px; gap: 1.25rem; }
+  @media (max-width: 900px) { .page-wrap { grid-template-columns: 1fr; } }
+
+  /* Ad placeholder — blends as a "featured" strip */
+  .ad-strip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .ad-sidebar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem;
+  }
+  .card-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.85rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Search */
+  .search-wrap { position: relative; margin-bottom: 1.25rem; }
+  #search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.95rem;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    background: var(--card);
+    outline: none;
+    transition: border-color 0.15s;
+    color: var(--text);
+  }
+  #search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  #search-btn {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    background: var(--accent); color: #fff; border: none; border-radius: 3px;
+    padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    font-family: 'IBM Plex Sans', sans-serif; transition: background 0.15s;
+  }
+  #search-btn:hover { background: #1e40af; }
+
+  /* Suggestions */
+  #suggestions {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 4px; z-index: 30; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    max-height: 220px; overflow-y: auto;
+  }
+  .suggestion-item {
+    padding: 0.6rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.6rem;
+    transition: background 0.1s;
+  }
+  .suggestion-item:hover { background: var(--bg); }
+  .sug-logo {
+    width: 22px; height: 22px; border-radius: 4px; background: var(--bg);
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; color: var(--accent); flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .sug-category { font-size: 0.7rem; color: var(--muted); margin-left: auto; }
+
+  /* Status Result */
+  #status-result { display: none; }
+  .status-header {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    flex-wrap: wrap; margin-bottom: 1rem;
+  }
+  .status-name { font-size: 1.2rem; font-weight: 700; }
+  .status-url { font-size: 0.72rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.78rem; font-weight: 600; flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .badge-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+  .badge-yellow { background: #fef9c3; color: #a16207; border: 1px solid #fde68a; }
+  .badge-red { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .pulse-green { background: #16a34a; animation: pulse-g 1.6s infinite; }
+  .pulse-yellow { background: #d97706; animation: pulse-y 1.6s infinite; }
+  .pulse-red { background: #dc2626; animation: pulse-r 1.6s infinite; }
+  @keyframes pulse-g { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse-y { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse-r { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* Metrics row */
+  .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+  @media (max-width: 500px) { .metrics-row { grid-template-columns: 1fr 1fr; } }
+  .metric-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.75rem; text-align: center;
+  }
+  .metric-val { font-size: 1.2rem; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+  .metric-lbl { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+  /* Heatmap */
+  .heatmap-section { margin-bottom: 1rem; }
+  #report-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    border: 1.5px solid #fca5a5; background: #fff5f5; color: #dc2626;
+    padding: 0.55rem 1rem; border-radius: 4px; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; transition: all 0.15s;
+  }
+  #report-btn:hover { background: #fee2e2; }
+  #report-btn:active { transform: scale(0.97); }
+  #report-btn.reported { border-color: #ccc; background: #f5f5f5; color: var(--muted); cursor: default; }
+  .heatmap-bar-wrap { margin-top: 0.75rem; }
+  .heatmap-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); margin-bottom: 0.3rem; font-family: 'IBM Plex Mono', monospace; }
+  .heatmap-track { height: 10px; background: var(--bg); border-radius: 100px; border: 1px solid var(--border); overflow: hidden; }
+  .heatmap-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #fde68a, #f97316, #dc2626); transition: width 0.4s ease; }
+  .heatmap-count { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; font-family: 'IBM Plex Mono', monospace; }
+
+  /* Uptime grid */
+  .uptime-grid { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 0.5rem; }
+  .uptime-cell {
+    width: 14px; height: 14px; border-radius: 2px; cursor: default;
+    transition: transform 0.1s;
+  }
+  .uptime-cell:hover { transform: scale(1.2); }
+
+  /* Mid-content ad placeholder */
+  .ad-mid {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 4px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 0.7rem; font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em; margin: 1.25rem 0;
+  }
+
+  /* Sidebar */
+  .sidebar-section { margin-bottom: 1.25rem; }
+  .outage-item {
+    padding: 0.65rem 0; border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .outage-item:last-child { border-bottom: none; }
+  .outage-name { font-weight: 600; font-size: 0.82rem; }
+  .outage-meta { font-size: 0.7rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .outage-type {
+    display: inline-block; font-size: 0.62rem; padding: 1px 6px;
+    border-radius: 100px; font-weight: 600; margin-top: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .type-down { background: #fee2e2; color: #b91c1c; }
+  .type-degraded { background: #fef9c3; color: #a16207; }
+  .type-slow { background: #eff6ff; color: #1d4ed8; }
+
+  /* Error codes */
+  .error-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+  }
+  .error-item:last-child { border-bottom: none; }
+  .error-code { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.82rem; color: var(--accent); }
+  .error-desc { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+  .error-bar { height: 4px; border-radius: 100px; background: #e0e7ff; margin-top: 4px; }
+  .error-fill { height: 100%; border-radius: 100px; background: var(--accent); transition: width 0.3s; }
+
+  /* Popular chips */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .chip {
+    background: var(--card); border: 1px solid var(--border); border-radius: 100px;
+    padding: 0.3rem 0.75rem; font-size: 0.75rem; cursor: pointer; font-weight: 500;
+    transition: all 0.15s; color: var(--text);
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+
+  /* Checking state */
+  .checking-state { text-align: center; padding: 2rem 1rem; color: var(--muted); }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 0.75rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .checking-label { font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 1.5rem 1rem; color: var(--muted);
+    font-size: 0.7rem; border-top: 1px solid var(--border); margin-top: 1.5rem;
+    font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.03em;
+  }
+
+  /* Scroll */
+  ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 </style>
 </head>
 <body>
 
-<!-- (ALL YOUR HTML REMAINS EXACTLY THE SAME — UNCHANGED) -->
+<!-- HEADER -->
+<header id="site-header">
+  <div class="logo">UptimeMetric<span>Pro</span></div>
+  <div style="display:flex;align-items:center;gap:1.5rem;">
+    <nav style="display:flex;gap:1.25rem;">
+      <a href="/about/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#9ca3af'">About</a>
+      <a href="/contact/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#9ca3af'">Contact</a>
+      <a href="/privacy-policy/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#9ca3af;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#9ca3af'">Privacy</a>
+    </nav>
+    <div class="header-meta" id="live-clock">— live</div>
+  </div>
+</header>
+
+<!-- TOP AD STRIP (blends as a featured area) -->
+<div style="max-width:1280px;margin:0 auto;padding:0.75rem 1rem 0;">
+  <div class="ad-strip" style="display:none" id="ad-top"></div>
+</div>
+
+<!-- PAGE LAYOUT -->
+<div class="page-wrap">
+
+  <!-- MAIN COLUMN -->
+  <main>
+
+    <!-- Search -->
+    <div class="search-wrap" id="search-container">
+      <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search-input" type="text" placeholder="Search any SaaS (Clio, Salesforce, Zoom…)" autocomplete="off" />
+      <button id="search-btn">Check →</button>
+      <div id="suggestions" style="display:none;"></div>
+    </div>
+
+    <!-- Popular quick chips -->
+    <div class="chip-row" id="popular-chips">
+      <span class="chip" onclick="quickCheck('Salesforce')">Salesforce</span>
+      <span class="chip" onclick="quickCheck('Zoom')">Zoom</span>
+      <span class="chip" onclick="quickCheck('Slack')">Slack</span>
+      <span class="chip" onclick="quickCheck('Clio')">Clio</span>
+      <span class="chip" onclick="quickCheck('HubSpot')">HubSpot</span>
+      <span class="chip" onclick="quickCheck('Notion')">Notion</span>
+      <span class="chip" onclick="quickCheck('Jira')">Jira</span>
+      <span class="chip" onclick="quickCheck('GitHub')">GitHub</span>
+    </div>
+
+    <!-- CHECKING STATE -->
+    <div id="checking-state" style="display:none;" class="card checking-state">
+      <div class="spinner"></div>
+      <div class="checking-label" id="checking-label">Pinging endpoint…</div>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div id="status-result" class="card">
+      <div class="card-title">Live Status Check</div>
+      <div class="status-header">
+        <div>
+          <div class="status-name" id="result-name">—</div>
+          <div class="status-url" id="result-url">—</div>
+        </div>
+        <div class="status-badge" id="status-badge">—</div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-row">
+        <div class="metric-box">
+          <div class="metric-val" id="met-latency">—</div>
+          <div class="metric-lbl">Response (ms)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" id="met-uptime">—</div>
+          <div class="metric-lbl">30-day Uptime</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" id="met-incidents">—</div>
+          <div class="metric-lbl">Open Incidents</div>
+        </div>
+      </div>
+
+      <!-- 30-day uptime grid -->
+      <div class="card-title" style="margin-top:0.25rem;">30-Day Uptime History</div>
+      <div class="uptime-grid" id="uptime-grid"></div>
+      <div style="display:flex;gap:1rem;margin-top:0.5rem;font-size:0.68rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">
+        <span>■ <span style="color:#16a34a">Operational</span></span>
+        <span>■ <span style="color:#d97706">Degraded</span></span>
+        <span>■ <span style="color:#dc2626">Down</span></span>
+      </div>
+
+      <!-- Mid-content ad placeholder -->
+      <div class="ad-mid" style="display:none" id="ad-mid"></div>
+
+      <!-- Heatmap / community -->
+      <div class="heatmap-section" style="margin-top:1rem;">
+        <div class="card-title">Community Issue Heatmap</div>
+        <div style="display:flex;align-items:center;gap:0.85rem;flex-wrap:wrap;">
+          <button id="report-btn" onclick="reportIssue()">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            I'm having issues
+          </button>
+          <div id="report-count-label" style="font-size:0.72rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;"></div>
+        </div>
+        <div class="heatmap-bar-wrap">
+          <div class="heatmap-label">
+            <span>Issue reports today</span>
+            <span id="heatmap-pct">0%</span>
+          </div>
+          <div class="heatmap-track">
+            <div class="heatmap-fill" id="heatmap-fill" style="width:0%"></div>
+          </div>
+          <div class="heatmap-count" id="heatmap-count-text"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Default empty state -->
+    <div id="empty-state" class="card" style="text-align:center;padding:2.5rem 1rem;">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">🔍</div>
+      <div style="font-weight:600;font-size:1rem;margin-bottom:0.35rem;">Check any SaaS status instantly</div>
+      <div style="font-size:0.8rem;color:var(--muted);">Type a product name above or tap a quick chip to get started.</div>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside>
+
+    <!-- Sidebar ad placeholder -->
+    <div class="ad-sidebar" style="display:none" id="ad-sidebar"></div>
+
+    <!-- Recent Outages -->
+    <div class="card sidebar-section">
+      <div class="card-title">Recent Outages</div>
+      <div id="outage-list"></div>
+    </div>
+
+    <!-- Top Error Codes -->
+    <div class="card sidebar-section">
+      <div class="card-title">Top Error Codes</div>
+      <div id="error-list"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="card" style="padding:1rem;">
+      <div class="card-title">Status Key</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.78rem;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#16a34a;display:inline-block;"></span> Operational — All systems go
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.78rem;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#d97706;display:inline-block;"></span> Degraded — Partial issues
+        </div>
+        <div style="display:flex;align-items:center;gap:0.6rem;font-size:0.78rem;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#dc2626;display:inline-block;"></span> Down — Major outage
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<footer>
+  <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+    <a href="/about/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#6b6860;text-decoration:none;" onmouseover="this.style.color='#1d4ed8'" onmouseout="this.style.color='#6b6860'">About</a>
+    <a href="/contact/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#6b6860;text-decoration:none;" onmouseover="this.style.color='#1d4ed8'" onmouseout="this.style.color='#6b6860'">Contact</a>
+    <a href="/privacy-policy/" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:#6b6860;text-decoration:none;" onmouseover="this.style.color='#1d4ed8'" onmouseout="this.style.color='#6b6860'">Privacy Policy</a>
+  </div>
+  UptimeMetricPro — Not affiliated with any listed software. Status checks are simulated pings. Last updated: <span id="footer-time">—</span>
+</footer>
 
 <script>
 // ─── DATA ───────────────────────────────────────────────────────────────────
-const SAAS_DB = [ /* unchanged */ ];
-const RECENT_OUTAGES = [ /* unchanged */ ];
-const ERROR_CODES = [ /* unchanged */ ];
+
+const SAAS_DB = [
+  { name: 'Salesforce', url: 'https://status.salesforce.com', category: 'CRM' },
+  { name: 'HubSpot', url: 'https://www.hubspot.com/login', category: 'CRM' },
+  { name: 'Pipedrive', url: 'https://app.pipedrive.com', category: 'CRM' },
+  { name: 'Zoho CRM', url: 'https://accounts.zoho.com', category: 'CRM' },
+  { name: 'Clio', url: 'https://app.clio.com/session/new', category: 'Legal' },
+  { name: 'MyCase', url: 'https://app.mycase.com/login', category: 'Legal' },
+  { name: 'Lawmatics', url: 'https://app.lawmatics.com/login', category: 'Legal' },
+  { name: 'PracticePanther', url: 'https://app.practicepanther.com/login', category: 'Legal' },
+  { name: 'Zoom', url: 'https://zoom.us/signin', category: 'Comms' },
+  { name: 'Slack', url: 'https://slack.com/signin', category: 'Comms' },
+  { name: 'Microsoft Teams', url: 'https://teams.microsoft.com', category: 'Comms' },
+  { name: 'Google Workspace', url: 'https://workspace.google.com', category: 'Productivity' },
+  { name: 'Notion', url: 'https://www.notion.so/login', category: 'Productivity' },
+  { name: 'Airtable', url: 'https://airtable.com/login', category: 'Productivity' },
+  { name: 'ClickUp', url: 'https://app.clickup.com/login', category: 'Project Mgmt' },
+  { name: 'Asana', url: 'https://app.asana.com/-/login', category: 'Project Mgmt' },
+  { name: 'Monday.com', url: 'https://auth.monday.com', category: 'Project Mgmt' },
+  { name: 'Jira', url: 'https://jira.atlassian.com', category: 'Dev Tools' },
+  { name: 'GitHub', url: 'https://github.com/login', category: 'Dev Tools' },
+  { name: 'GitLab', url: 'https://gitlab.com/users/sign_in', category: 'Dev Tools' },
+  { name: 'Stripe', url: 'https://dashboard.stripe.com/login', category: 'Payments' },
+  { name: 'QuickBooks', url: 'https://qbo.intuit.com', category: 'Accounting' },
+  { name: 'Xero', url: 'https://login.xero.com', category: 'Accounting' },
+  { name: 'Freshdesk', url: 'https://freshdesk.com/login', category: 'Support' },
+  { name: 'Zendesk', url: 'https://www.zendesk.com/login', category: 'Support' },
+  { name: 'Intercom', url: 'https://app.intercom.com', category: 'Support' },
+  { name: 'DocuSign', url: 'https://account.docusign.com', category: 'eSign' },
+  { name: 'Adobe Sign', url: 'https://sign.adobe.com', category: 'eSign' },
+  { name: 'Dropbox', url: 'https://www.dropbox.com/login', category: 'Storage' },
+  { name: 'Box', url: 'https://account.box.com/login', category: 'Storage' },
+  { name: 'Shopify', url: 'https://accounts.shopify.com/lookup', category: 'eCommerce' },
+  { name: 'WooCommerce', url: 'https://woocommerce.com/my-account', category: 'eCommerce' },
+  { name: 'Mailchimp', url: 'https://login.mailchimp.com', category: 'Marketing' },
+  { name: 'ActiveCampaign', url: 'https://www.activecampaign.com/login', category: 'Marketing' },
+  { name: 'Twilio', url: 'https://www.twilio.com/login', category: 'Communications API' },
+  { name: 'AWS', url: 'https://console.aws.amazon.com', category: 'Cloud' },
+  { name: 'Google Cloud', url: 'https://console.cloud.google.com', category: 'Cloud' },
+  { name: 'Microsoft Azure', url: 'https://portal.azure.com', category: 'Cloud' },
+  { name: 'Heroku', url: 'https://id.heroku.com/login', category: 'Cloud' },
+  { name: 'Figma', url: 'https://www.figma.com/login', category: 'Design' },
+];
+
+const RECENT_OUTAGES = [
+  { name: 'Zoom', time: '2h ago', type: 'degraded', detail: 'Video call latency' },
+  { name: 'GitHub', time: '5h ago', type: 'slow', detail: 'Actions queue delays' },
+  { name: 'Slack', time: '1d ago', type: 'down', detail: 'Message sync failure' },
+  { name: 'Salesforce', time: '2d ago', type: 'degraded', detail: 'API rate limit errors' },
+  { name: 'AWS', time: '3d ago', type: 'down', detail: 'us-east-1 S3 disruption' },
+  { name: 'Notion', time: '4d ago', type: 'slow', detail: 'Search indexing lag' },
+];
+
+const ERROR_CODES = [
+  { code: '502', desc: 'Bad Gateway', pct: 82 },
+  { code: '503', desc: 'Service Unavailable', pct: 68 },
+  { code: '500', desc: 'Internal Server Error', pct: 55 },
+  { code: '429', desc: 'Too Many Requests', pct: 41 },
+  { code: '504', desc: 'Gateway Timeout', pct: 29 },
+  { code: '403', desc: 'Forbidden', pct: 17 },
+];
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
-const issueReports = {};
+
+const issueReports = {}; // { [name]: count }
 const reportedByUser = new Set();
 
 // ─── CLOCK ───────────────────────────────────────────────────────────────────
+
 function updateClock() {
   const now = new Date();
   const str = now.toUTCString().replace('GMT', 'UTC');
@@ -60,13 +523,82 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ─── SEARCH / AUTOCOMPLETE (UNCHANGED) ───────────────────────────────────────
+// ─── SIDEBAR RENDER ──────────────────────────────────────────────────────────
+
+function renderSidebar() {
+  // Outages
+  const outageEl = document.getElementById('outage-list');
+  outageEl.innerHTML = RECENT_OUTAGES.map(o => `
+    <div class="outage-item">
+      <div class="outage-name">${o.name}</div>
+      <div class="outage-meta">${o.time} — ${o.detail}</div>
+      <span class="outage-type type-${o.type}">${o.type.toUpperCase()}</span>
+    </div>
+  `).join('');
+
+  // Error codes
+  const errEl = document.getElementById('error-list');
+  errEl.innerHTML = ERROR_CODES.map(e => `
+    <div class="error-item" style="flex-direction:column;align-items:flex-start;">
+      <div style="display:flex;width:100%;justify-content:space-between;align-items:center;">
+        <span class="error-code">${e.code}</span>
+        <span style="font-size:0.68rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">${e.pct}%</span>
+      </div>
+      <div class="error-desc">${e.desc}</div>
+      <div class="error-bar" style="width:100%">
+        <div class="error-fill" style="width:${e.pct}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+renderSidebar();
+
+// ─── SEARCH / AUTOCOMPLETE ───────────────────────────────────────────────────
+
 const input = document.getElementById('search-input');
 const sugBox = document.getElementById('suggestions');
 
-/* (ALL SEARCH LOGIC UNCHANGED) */
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  if (!q || q.length < 1) { sugBox.style.display = 'none'; return; }
+  const matches = SAAS_DB.filter(s => s.name.toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { sugBox.style.display = 'none'; return; }
+  sugBox.innerHTML = matches.map(m => `
+    <div class="suggestion-item" onclick="quickCheck('${m.name}')">
+      <div class="sug-logo">${m.name[0]}</div>
+      <span style="font-weight:500">${highlight(m.name, q)}</span>
+      <span class="sug-category">${m.category}</span>
+    </div>
+  `).join('');
+  sugBox.style.display = 'block';
+});
 
-// ─── STATUS CHECK (UPDATED TO REAL BACKEND) ──────────────────────────────────
+function highlight(text, q) {
+  const idx = text.toLowerCase().indexOf(q);
+  if (idx === -1) return text;
+  return text.substring(0, idx) + `<strong>${text.substring(idx, idx + q.length)}</strong>` + text.substring(idx + q.length);
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('search-container').contains(e.target)) {
+    sugBox.style.display = 'none';
+  }
+});
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { checkStatus(); }
+});
+
+document.getElementById('search-btn').addEventListener('click', checkStatus);
+
+function quickCheck(name) {
+  input.value = name;
+  sugBox.style.display = 'none';
+  checkStatus();
+}
+
+// ─── STATUS CHECK ────────────────────────────────────────────────────────────
+
 function checkStatus() {
   const q = input.value.trim();
   if (!q) return;
@@ -75,43 +607,212 @@ function checkStatus() {
   const match = SAAS_DB.find(s => s.name.toLowerCase() === q.toLowerCase())
     || SAAS_DB.find(s => s.name.toLowerCase().includes(q.toLowerCase()));
 
-  const target = match || {
-    name: q,
-    url: `https://${q.toLowerCase().replace(/\s+/g, '')}.com`,
-    category: 'Unknown'
-  };
+  const target = match || { name: q, url: `https://${q.toLowerCase().replace(/\s+/g, '')}.com`, category: 'Unknown' };
 
   showChecking(target.name);
 
-  fetch(`/check?url=${encodeURIComponent(target.url)}`)
+  fetch(`/api/check?url=${encodeURIComponent(target.url)}`)
     .then(res => res.json())
     .then(result => {
       showResult(target, result);
     })
-    .catch(err => {
-      console.error('Check failed:', err);
-
-      showResult(target, {
-        statusCode: 'red',
-        latency: 0,
-        uptime: '0.00',
-        incidents: 0
-      });
+    .catch(() => {
+      showResult(target, { statusCode: 'red', latency: 0, uptime: '0.00', incidents: 1 });
     });
 }
 
-// ─── KEEP simulateCheck (NOT USED ANYMORE BUT LEFT UNCHANGED) ────────────────
+let checkInterval = null;
+
 function simulateCheck(target) {
-  return { statusCode: 'green', latency: 0, uptime: 0, incidents: 0 };
+  // Deterministic seed from name so same tool = same result each session
+  const seed = target.name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rand = seededRand(seed + Date.now() % 86400000);
+
+  let statusCode, latency, uptime, incidents;
+  const r = rand();
+  if (r < 0.72) {
+    statusCode = 'green';
+    latency = Math.floor(80 + rand() * 280);
+    uptime = (99.1 + rand() * 0.85).toFixed(2);
+    incidents = 0;
+  } else if (r < 0.88) {
+    statusCode = 'yellow';
+    latency = Math.floor(400 + rand() * 800);
+    uptime = (97.5 + rand() * 1.5).toFixed(2);
+    incidents = Math.floor(1 + rand() * 2);
+  } else {
+    statusCode = 'red';
+    latency = Math.floor(1800 + rand() * 3000);
+    uptime = (93 + rand() * 4).toFixed(2);
+    incidents = Math.floor(1 + rand() * 3);
+  }
+  return { statusCode, latency, uptime, incidents };
 }
 
-// ─── REST OF YOUR ORIGINAL JS (UNCHANGED) ───────────────────────────────────
-/* showChecking, showResult, uptime grid, heatmap, sidebar, etc. */
+function seededRand(seed) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return Math.abs(s) / 0x7fffffff;
+  };
+}
 
+function showChecking(name) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('status-result').style.display = 'none';
+  document.getElementById('checking-state').style.display = 'block';
+  const steps = [`Pinging ${name}…`, 'Resolving DNS…', 'Measuring latency…', 'Analysing response…'];
+  let i = 0;
+  document.getElementById('checking-label').textContent = steps[0];
+  if (checkInterval) clearInterval(checkInterval);
+  checkInterval = setInterval(() => {
+    i = (i + 1) % steps.length;
+    document.getElementById('checking-label').textContent = steps[i];
+  }, 320);
+}
+
+function showResult(target, result) {
+  clearInterval(checkInterval);
+  document.getElementById('checking-state').style.display = 'none';
+  document.getElementById('status-result').style.display = 'block';
+
+  document.getElementById('result-name').textContent = target.name;
+  document.getElementById('result-url').textContent = target.url;
+  document.getElementById('met-latency').textContent = result.latency;
+  document.getElementById('met-uptime').textContent = result.uptime + '%';
+  document.getElementById('met-incidents').textContent = result.incidents;
+
+  // Badge
+  const badge = document.getElementById('status-badge');
+  if (result.statusCode === 'green') {
+    badge.className = 'status-badge badge-green';
+    badge.innerHTML = `<span class="pulse pulse-green"></span> Operational`;
+  } else if (result.statusCode === 'yellow') {
+    badge.className = 'status-badge badge-yellow';
+    badge.innerHTML = `<span class="pulse pulse-yellow"></span> Degraded`;
+  } else {
+    badge.className = 'status-badge badge-red';
+    badge.innerHTML = `<span class="pulse pulse-red"></span> Outage`;
+  }
+
+  // Uptime grid (30 days)
+  buildUptimeGrid(target.name, result.statusCode);
+
+  // Heatmap
+  const reports = issueReports[target.name] || 0;
+  updateHeatmap(target.name, reports, false);
+  const wasReported = reportedByUser.has(target.name);
+  const btn = document.getElementById('report-btn');
+  btn.className = wasReported ? 'reported' : '';
+  btn.disabled = wasReported;
+  btn.onclick = wasReported ? null : reportIssue;
+}
+
+function buildUptimeGrid(name, currentStatus) {
+  const grid = document.getElementById('uptime-grid');
+  const seed = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const rand = seededRand(seed);
+  const colors = [];
+  for (let i = 0; i < 90; i++) {
+    const r = rand();
+    let col;
+    if (i === 89) {
+      col = currentStatus === 'green' ? '#16a34a' : currentStatus === 'yellow' ? '#d97706' : '#dc2626';
+    } else if (r < 0.88) {
+      col = '#16a34a';
+    } else if (r < 0.96) {
+      col = '#d97706';
+    } else {
+      col = '#dc2626';
+    }
+    colors.push(col);
+  }
+  grid.innerHTML = colors.map((c, i) => `<div class="uptime-cell" style="background:${c}" title="Day ${i + 1}"></div>`).join('');
+}
+
+// ─── HEATMAP / COMMUNITY ─────────────────────────────────────────────────────
+
+function reportIssue() {
+  const name = document.getElementById('result-name').textContent;
+  if (!name || reportedByUser.has(name)) return;
+  reportedByUser.add(name);
+  issueReports[name] = (issueReports[name] || 0) + 1;
+  updateHeatmap(name, issueReports[name], true);
+
+  const btn = document.getElementById('report-btn');
+  btn.className = 'reported';
+  btn.disabled = true;
+  btn.onclick = null;
+}
+
+function updateHeatmap(name, count, animate) {
+  const maxScale = 50;
+  const pct = Math.min(100, Math.round((count / maxScale) * 100));
+
+  document.getElementById('heatmap-pct').textContent = pct + '%';
+  document.getElementById('heatmap-fill').style.width = pct + '%';
+  document.getElementById('heatmap-count-text').textContent = count > 0 ? `${count} report${count === 1 ? '' : 's'} this session` : 'No reports yet — be the first if you're having issues';
+  document.getElementById('report-count-label').textContent = reportedByUser.has(name) ? 'You reported an issue' : '';
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+
+// Focus search on load
+input.focus();
 </script>
+<!-- ════════════ COOKIE CONSENT BANNER (UK GDPR) ════════════ -->
+<div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f1117;border-top:1px solid #2a3050;padding:1rem 1.25rem;font-family:'IBM Plex Sans',sans-serif;">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;">
+      <p style="font-size:.82rem;color:#e5e7eb;line-height:1.6;margin-bottom:.35rem;">
+        <strong style="color:#fff;">This site uses cookies.</strong>
+        We use essential cookies to make the site work, and optional analytics and advertising cookies (via Google AdSense) to improve our service and serve relevant ads.
+      </p>
+      <p style="font-size:.75rem;color:#9ca3af;line-height:1.5;">
+        You can accept all cookies, decline non-essential cookies, or review our full cookie policy. See our
+        <a href="/privacy-policy/" style="color:#60a5fa;text-decoration:underline;">Privacy Policy</a> for full details.
+      </p>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;flex-shrink:0;">
+      <button id="cookie-accept-all" style="background:#1d4ed8;color:#fff;border:none;border-radius:4px;padding:.5rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;">Accept all</button>
+      <button id="cookie-decline" style="background:transparent;color:#9ca3af;border:1px solid #374151;border-radius:4px;padding:.5rem 1.1rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;">Essential only</button>
+      <a href="/privacy-policy/" style="color:#6b7280;font-size:.75rem;text-decoration:underline;white-space:nowrap;font-family:'IBM Plex Sans',sans-serif;">Learn more</a>
+    </div>
+  </div>
+</div>
 
-<!-- COOKIE BANNER (UNCHANGED) -->
-<!-- (ENTIRE COOKIE SCRIPT REMAINS EXACTLY THE SAME) -->
+<script>
+(function() {
+  var CONSENT_KEY = 'ump_cookie_consent';
+  var banner      = document.getElementById('cookie-banner');
+  var acceptBtn   = document.getElementById('cookie-accept-all');
+  var declineBtn  = document.getElementById('cookie-decline');
+  function getConsent() { try { return localStorage.getItem(CONSENT_KEY); } catch(e) { return null; } }
+  function setConsent(val) { try { localStorage.setItem(CONSENT_KEY, val); } catch(e) {} }
+  function hideBanner() { banner.style.display = 'none'; }
+  function showBanner() { banner.style.display = 'block'; }
+  function loadAnalytics() {
+    /* Insert your Google Analytics / AdSense tag here after consent is granted.
+       Example GA4:
+       var s = document.createElement('script');
+       s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+       s.async = true; document.head.appendChild(s);
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date()); gtag('config', 'G-XXXXXXXXXX');
+    */
+  }
+  var existing = getConsent();
+  if (!existing) { showBanner(); }
+  else if (existing === 'accepted') { loadAnalytics(); }
+  acceptBtn.addEventListener('click', function() { setConsent('accepted'); hideBanner(); loadAnalytics(); });
+  declineBtn.addEventListener('click', function() { setConsent('declined'); hideBanner(); });
+  acceptBtn.onmouseover = function() { this.style.background='#1e40af'; };
+  acceptBtn.onmouseout  = function() { this.style.background='#1d4ed8'; };
+  declineBtn.onmouseover = function() { this.style.color='#e5e7eb'; this.style.borderColor='#6b7280'; };
+  declineBtn.onmouseout  = function() { this.style.color='#9ca3af'; this.style.borderColor='#374151'; };
+})();
+</script>
 
 </body>
 </html>
