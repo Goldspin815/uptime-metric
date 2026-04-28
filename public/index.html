@@ -751,7 +751,7 @@ function updateHeatmap(name, count, animate) {
 
   document.getElementById('heatmap-pct').textContent = pct + '%';
   document.getElementById('heatmap-fill').style.width = pct + '%';
-  document.getElementById('heatmap-count-text').textContent = count > 0 ? `${count} report${count === 1 ? '' : 's'} this session` : 'No reports yet — be the first if you're having issues';
+  document.getElementById('heatmap-count-text').textContent = count > 0 ? `${count} report${count === 1 ? '' : 's'} this session` : 'No reports yet — be the first if you are having issues';
   document.getElementById('report-count-label').textContent = reportedByUser.has(name) ? 'You reported an issue' : '';
 }
 
